@@ -156,8 +156,8 @@ form > .form-block > button[type="button"]:hover, .button-group > .y-button:hove
 
 .button-group > .y-button {
     display: inline-block;
-    width: 15%;
-    min-width: 50px;
+    width: 10%;
+    min-width: 40px;
     margin: 1%;
     box-sizing: border-box;
     border: 1px solid #a341a1;

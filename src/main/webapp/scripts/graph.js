@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('graphCanvas');
     const ctx = canvas.getContext('2d');
+    const rSelect = document.getElementById('r');
 
-    function drawGraph() {
+    let currentR = 4;
+
+    function drawGraph(R) {
         const width = canvas.width;
         const height = canvas.height;
         const centerX = width / 2;
         const centerY = height / 2;
         const scaleX = width / 11;
         const scaleY = height / 11;
-        const R = 4;
 
         ctx.clearRect(0, 0, width, height);
 
@@ -96,5 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillText("0", centerX + 10, centerY + 20);
     }
 
-    drawGraph();
+    drawGraph(currentR);
+
+    rSelect.addEventListener('change', () => {
+        const newR = parseFloat(rSelect.value);
+        if (newR) {
+            currentR = newR;
+            drawGraph(currentR);
+        }
+    });
 });

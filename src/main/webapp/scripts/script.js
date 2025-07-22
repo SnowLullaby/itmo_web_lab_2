@@ -1,4 +1,4 @@
-const stat = {
+/**const stat = {
     year: '2-digit',
     month: '2-digit',
     day: '2-digit',
@@ -6,7 +6,7 @@ const stat = {
     minute: '2-digit',
     second: '2-digit',
     hour12: false
-}
+}**/
 
 function getFormData() {
     const x = document.getElementById('x').value;
@@ -46,14 +46,10 @@ function handleFormSubmit() {
     }
 
     fetch(fetchOptions.url, fetchOptions)
-        .then(handleResponse)
-        .then(results => {
-            updateTable(results);
-        })
         .catch(error => alert("Ошибка " + error.message));
 }
 
-function handleResponse(response) {
+/**function handleResponse(response) {
     if (!response.ok) {
         return response.json()
             .catch(() => {
@@ -92,4 +88,4 @@ function updateTable(results) {
         `;
         tbody.insertBefore(row, tbody.firstChild);
     });
-}
+}**/
