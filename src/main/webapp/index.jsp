@@ -20,7 +20,7 @@
                     <input type="text" id="x" name="x" placeholder="Введите X (-3...5)"><br>
                 </div>
                 <div class="form-block">
-                    <label for="y">Y:</label><br>
+                    <label>Y:</label><br>
                     <div class="button-group" id="yButtons">
                         <% for(int y = -4; y <= 4; y++) { %>
                             <button type="button" class="y-button" data-value="<%= y %>"><%= y %></button>
@@ -38,13 +38,13 @@
                     </select>
                 </div>
                 <div class="form-block">
-                    <button type="button" onclick="handleFormSubmit()">Отправить</button>
+                    <button type="button" onclick="handleSubmission('getFormData')">Отправить</button>
                     <div class="error-message">Недопустимые данные для ввода</div>
                 </div>
             </form>
         </div>
         <div class="graph-cell">
-            <canvas id="graphCanvas" width="500" height="500"></canvas>
+            <canvas id="graphCanvas" width="500" height="500" onclick="handleSubmission('getCanvasData', event)"></canvas>
             <div class="method-switcher">
                 <input type="radio" id="method_post" name="method" value="POST" checked><label for="method_post">POST</label>
                 <input type="radio" id="method_get" name="method" value="GET"><label for="method_get">GET</label>
@@ -70,7 +70,7 @@
 </div>
 <script src="scripts/buttonSelector.js"></script>
 <script src="scripts/validator.js"></script>
-<script src="scripts/script.js"></script>
 <script src="scripts/graph.js"></script>
+<script src="scripts/script.js"></script>
 </body>
 </html>

@@ -4,16 +4,25 @@ function validateInput(x, yValues, r) {
     const xVal = parseFloat(x);
     const rVal = parseFloat(r);
 
-    if (!checkRequiredFields(x, yValues, r) || !checkXFormat(x) || !checkXRange(xVal)
+    if (!checkR(r) || !checkRequiredFields(x, yValues) || !checkXFormat(x) || !checkXRange(xVal)
         || !checkYValues(yValues) || !checkRRange(rVal)) return false;
 
     hideNotification();
     return true;
 }
 
-function checkRequiredFields(x, yValues, r) {
-    if (!x || !r || !yValues || yValues.length === 0) {
-        showNotification("Не задано значение X, Y или R");
+function checkR(r) {
+    if (!r) {
+        showNotification("Не задано значение R");
+        return false;
+    }
+    return true;
+}
+
+
+function checkRequiredFields(x, yValues) {
+    if (!x || !yValues || yValues.length === 0) {
+        showNotification("Не задано значение координат");
         return false;
     }
     return true;

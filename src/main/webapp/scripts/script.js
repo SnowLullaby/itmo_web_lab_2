@@ -1,13 +1,3 @@
-/**const stat = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-}**/
-
 function getFormData() {
     const x = document.getElementById('x').value;
     const y = document.getElementById('y').value;
@@ -17,8 +7,9 @@ function getFormData() {
     return { x, yValues, r, method };
 }
 
-function handleFormSubmit() {
-    const { x, yValues, r, method } = getFormData();
+function handleSubmission(getDataFuncName, event) {
+    const isCanvasClick = getDataFuncName === 'getCanvasData';
+    const { x, yValues, r, method } = isCanvasClick ? getCanvasData(event) : getFormData();
 
     if (!validateInput(x, yValues, r)) return;
     const data = { x: parseFloat(x), y: yValues.map(y => parseFloat(y)), r: parseFloat(r) };
@@ -46,46 +37,10 @@ function handleFormSubmit() {
     }
 
     fetch(fetchOptions.url, fetchOptions)
-        .catch(error => alert("Ошибка " + error.message));
+        .then(response => {
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            alert("Ошибка: " + error.message);
+        });
 }
-
-/**function handleResponse(response) {
-    if (!response.ok) {
-        return response.json()
-            .catch(() => {
-                const errorMsg = `${response.status} - ${response.statusText || 'Unknown Error'}`;
-                throw new Error(`${errorMsg}`);
-            })
-            .then(results => {
-                const errorDetail = results && results.error ? `: ${results.error}` : '';
-                const errorMsg = `${response.status} - ${response.statusText}${errorDetail}`;
-                if (response.status >= 400 && response.status < 500) {
-                    throw new Error(`клиента: ${errorMsg}`);
-                } else if (response.status >= 500 && response.status < 600) {
-                    throw new Error(`сервера: ${errorMsg}`);
-                } else {
-                    throw new Error(errorMsg);
-                }
-            });
-    }
-    return response.json();
-}
-
-function updateTable(results) {
-    const tbody = document.querySelector("#resultsTable tbody");
-    results.forEach(result => {
-        const date = new Date(result.currentTime);
-        const formattedTime = date.toLocaleString('ru-RU', stat).replace(/,/, ' ');
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${result.x}</td>
-            <td>${result.y}</td>
-            <td>${result.r}</td>
-            <td data-result="${result.hit}">${result.hit ? "Попадание" : "Промах"}</td>
-            <td>${formattedTime}</td>
-            <td>${result.executionTime} ns</td>
-        `;
-        tbody.insertBefore(row, tbody.firstChild);
-    });
-}**/
