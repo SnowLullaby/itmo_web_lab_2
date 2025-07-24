@@ -25,12 +25,12 @@ function handleSubmission(getDataFuncName, event) {
             .join('&');
         fetchOptions = {
             method: 'GET',
-            url: `/controller?${queryString}`,
+            url: `controller?${queryString}`,
             headers: { 'Content-Type': 'application/json' } };
     } else {
         fetchOptions = {
             method: 'POST',
-            url: '/controller',
+            url: 'controller',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         };
@@ -38,7 +38,19 @@ function handleSubmission(getDataFuncName, event) {
 
     fetch(fetchOptions.url, fetchOptions)
         .then(response => {
-            window.location.href = response.url;
+            if (response.ok) {
+                return response.json().then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    } else {
+                        console.warn("Нет redirect в ответе");
+                    }
+                });
+            } else {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Неизвестная ошибка');
+                });
+            }
         })
         .catch(error => {
             alert("Ошибка: " + error.message);
