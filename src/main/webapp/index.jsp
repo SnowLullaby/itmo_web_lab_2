@@ -68,9 +68,9 @@
         </table>
     </div>
 </div>
-<script src="scripts/buttonSelector.js"></script>
-<script src="scripts/validator.js"></script>
-<script src="scripts/graph.js"></script>
-<script src="scripts/script.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/buttonSelector.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/validator.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/graph.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/script.js"></script>
 </body>
 </html>
