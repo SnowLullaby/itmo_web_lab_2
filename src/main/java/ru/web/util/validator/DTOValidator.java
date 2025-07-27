@@ -12,29 +12,29 @@ public class DTOValidator {
             return new ValidationResult(false, "X не задан");
         }
 
-        if (parsed.x() < -2 || parsed.x() > 2) {
-            return new ValidationResult(false, "X должен быть числом от -2 до 2");
-        }
-
-        if (parsed.r() == null) {
-            return new ValidationResult(false, "R не задан");
-        }
-
-        if (parsed.r() < -5 || parsed.r() > 5) {
-            return new ValidationResult(false, "R должен быть числом от -5 до 5");
+        if (parsed.x() < -3 || parsed.x() > 5) {
+            return new ValidationResult(false, "X должен быть числом от -3 до 5");
         }
 
         if (parsed.y() == null || parsed.y().length == 0) {
-            return new ValidationResult(false, "R не задан");
+            return new ValidationResult(false, "Y не задан");
         }
 
         for (Double y : parsed.y()) {
             if (y == null) {
                 return new ValidationResult(false, "Значение Y не может быть null");
             }
-            if (y < 1 || y > 3) {
-                return new ValidationResult(false, "Y должен быть числом от 1 до 3");
+            if (y < -4 || y > 4) {
+                return new ValidationResult(false, "Y должен быть числом от -4 до 4");
             }
+        }
+
+        if (parsed.r() == null) {
+            return new ValidationResult(false, "R не задан");
+        }
+
+        if (parsed.r() < 1 || parsed.r() > 3) {
+            return new ValidationResult(false, "R должен быть числом от 1 до 3");
         }
 
         return new ValidationResult(true, null);

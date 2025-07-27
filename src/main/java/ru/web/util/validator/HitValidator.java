@@ -6,14 +6,14 @@ public class HitValidator {
     }
 
     private static boolean validateSquare(double x, double y, double r) {
-        return x >= 0 && y >= 0 && x <= r / 2 && y <= r;
+        return x >= 0 && y >= 0 && x <= r && y <= r;
     }
 
     private static boolean validateCircle(double x, double y, double r) {
-        return x <= 0 && y <= 0 && x >= -r / 2 && y >= -r /2  && x * x + y * y <= (r / 2) * ( r / 2);
+        return x <= 0 && y >= 0 && x >= -r && y <= r  && x * x + y * y <= r * r;
     }
 
     private static boolean validateTriangle(double x, double y, double r) {
-        return x >= 0 && y <= 0 && x <= r / 2 && y >= -r && 2 * x - r <= y;
+        return x <= 0 && y <= 0 && x >= -r && y >= -r && -x - r <= y;
     }
 }
