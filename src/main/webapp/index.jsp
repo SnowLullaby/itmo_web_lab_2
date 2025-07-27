@@ -1,3 +1,8 @@
+<%@ page import="ru.web.service.HitList" %>
+<%@ page import="ru.web.dto.ResponseDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.LocalDateTime" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ru">
@@ -53,6 +58,7 @@
         </div>
     </div>
     <div class="results-container">
+        <button type="button" class="clear-button" onclick="clearHistory()">Очистить историю</button>
         <table id="resultsTable">
             <thead>
             <tr>
@@ -64,7 +70,33 @@
                 <th>Время выполнения</th>
             </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+            <%
+                HitList hitList = HitList.getInstance(request.getSession());
+                List<ResponseDTO> allResponses = hitList.getAll();
+
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
+
+                if (allResponses != null && !allResponses.isEmpty()) {
+                    java.util.Collections.reverse(allResponses);
+                    for (ResponseDTO r : allResponses) {
+                        LocalDateTime dateTime = LocalDateTime.parse(r.currentTime(), inputFormatter);
+                        String formattedTime = dateTime.format(outputFormatter);
+            %>
+            <tr>
+                <td><%= r.x() %></td>
+                <td><%= r.y() %></td>
+                <td><%= r.r() %></td>
+                <td data-result="<%= r.hit() %>"><%= r.hit() ? "Да" : "Нет" %></td>
+                <td><%= formattedTime %></td>
+                <td><%= r.executionTime() %> нс</td>
+            </tr>
+            <%
+                    }
+                }
+            %>
+            </tbody>
         </table>
     </div>
 </div>
@@ -72,5 +104,28 @@
 <script src="${pageContext.request.contextPath}/scripts/validator.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/graph.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/script.js"></script>
+<script>
+    window.ALL_POINTS_FROM_SESSION = [
+        <%
+            List<ResponseDTO> points = hitList.getAll();
+            for (int i = 0; i < points.size(); i++) {
+                ResponseDTO p = points.get(i);
+        %>
+        {
+            x: <%= p.x() %>,
+            y: <%= p.y() %>,
+            r: <%= p.r() %>,
+            hit: <%= p.hit() %>,
+            isLast: <%= i == points.size() - 1 %>
+        }<%= i < points.size() - 1 ? "," : "" %>
+        <%
+            }
+        %>
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        drawGraph(currentR);
+    });
+</script>
 </body>
 </html>
