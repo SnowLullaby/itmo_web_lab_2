@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class ResponseBuilder {
     private static final Gson GSON = new Gson();
@@ -27,16 +26,12 @@ public class ResponseBuilder {
         response.getWriter().flush();
     }
 
-    public static void sendWithRedirect(HttpServletResponse response, String redirectUrl) throws IOException {
+    public static void sendOk(HttpServletResponse response, String message) throws IOException {
         response.setStatus(200);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String json = GSON.toJson(Map.of(
-                "status", "success",
-                "redirect", redirectUrl
-        ));
-
+        String json = String.format("{\"%s\"}", message);
         response.getWriter().write(json);
         response.getWriter().flush();
     }

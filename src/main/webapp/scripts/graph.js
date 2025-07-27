@@ -3,10 +3,6 @@ const ctx = canvas.getContext('2d');
 const rSelect = document.getElementById('r');
 let currentR = 4;
 
-document.addEventListener('DOMContentLoaded', () => {
-    drawGraph(currentR);
-});
-
 function drawGraph(R) {
     const width = canvas.width;
     const height = canvas.height;
@@ -96,6 +92,8 @@ function drawGraph(R) {
     ctx.moveTo(centerX, centerY);
     ctx.stroke();
     ctx.fillText("0", centerX + 10, centerY + 20);
+
+    drawPointsFromSession();
 }
 
 rSelect.addEventListener('change', () => {
@@ -121,4 +119,29 @@ function getCanvasData(event) {
     const r = rSelect.value;
     const method = document.querySelector('input[name="method"]:checked')?.value || 'POST';
     return { x, yValues: [y], r, method };
+}
+
+function drawPointsFromSession() {
+    if (!window.ALL_POINTS_FROM_SESSION || ALL_POINTS_FROM_SESSION.length === 0) return;
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const scaleX = width / 11;
+    const scaleY = height / 11;
+
+    ALL_POINTS_FROM_SESSION.forEach(point => {
+        const canvasX = centerX + point.x * scaleX;
+        const canvasY = centerY - point.y * scaleY;
+
+        ctx.beginPath();
+        if (point.isLast) {
+            ctx.fillStyle = point.hit ? '#00805a' : '#ff0059';
+        } else {
+            ctx.fillStyle = '#656570';
+        }
+        ctx.arc(canvasX, canvasY, 5, 0, 2 * Math.PI);
+        ctx.fill();
+    });
 }

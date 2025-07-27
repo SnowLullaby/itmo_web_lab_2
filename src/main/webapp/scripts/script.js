@@ -39,20 +39,42 @@ function handleSubmission(getDataFuncName, event) {
     fetch(fetchOptions.url, fetchOptions)
         .then(response => {
             if (response.ok) {
-                return response.json().then(data => {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    } else {
-                        console.warn("Нет redirect в ответе");
-                    }
-                });
+                return response.text();
             } else {
-                return response.json().then(data => {
-                    throw new Error(data.error || 'Неизвестная ошибка');
+                return response.json().then(err => {
+                    throw new Error(err.error);
                 });
             }
         })
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        })
         .catch(error => {
             alert("Ошибка: " + error.message);
+        });
+}
+
+function clearHistory() {
+    if (!confirm("Очистить всю историю точек?")) return;
+
+    fetch('controller/clear', {
+        method: document.querySelector('input[name="method"]:checked')?.value || 'POST',
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                return response.json().then(err => {
+                    throw new Error(err.error);
+                });
+            }
+        })
+        .then(() => {
+            location.reload();
+        })
+        .catch(error => {
+            alert("Ошибка при очистке: " + error.message);
         });
 }

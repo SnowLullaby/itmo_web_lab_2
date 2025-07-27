@@ -140,7 +140,7 @@ form > .form-block > input[type="text"]:focus {
     color: #2d4057;
 }
 
-form > .form-block > button[type="button"], .button-group > .y-button {
+form > .form-block > button[type="button"], .button-group > .y-button, .results-container > .clear-button {
     padding: 3%;
     width: 100%;
     background-color: #a341a1;
@@ -150,11 +150,11 @@ form > .form-block > button[type="button"], .button-group > .y-button {
     cursor: pointer;
 }
 
-form > .form-block > button[type="button"]:hover, .button-group > .y-button:hover {
+form > .form-block > button[type="button"]:hover, .button-group > .y-button:hover, .results-container > .clear-button:hover {
     background-color: #6841a3;
 }
 
-.button-group > .y-button {
+.button-group > .y-button, .clear-button {
     display: inline-block;
     width: 10%;
     min-width: 40px;
@@ -223,4 +223,13 @@ td[data-result="true"] {
 
 td[data-result="false"] {
     color: #ff0059;
+}
+
+.results-container > .clear-button {
+    padding: 15px;
+    display: inline-block;
+    width: 20%;
+    min-width: 100px;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
 }
