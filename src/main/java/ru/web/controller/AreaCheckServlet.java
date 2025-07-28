@@ -1,4 +1,4 @@
-package ru.web.service;
+package ru.web.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,7 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import ru.web.dto.*;
-import ru.web.util.validator.HitValidator;
+import ru.web.service.HitList;
+import ru.web.service.HitValidator;
 import ru.web.util.builder.ResponseBuilder;
 
 import java.io.IOException;
@@ -49,12 +50,10 @@ public class AreaCheckServlet extends HttpServlet {
         HitList hitList = HitList.getInstance(request.getSession());
         hitList.addAll(currentResponses);
 
-        request.setAttribute("currentResponses", currentResponses);
-
-        request.setAttribute("allResponses", hitList.getAll());
+        request.getSession().setAttribute("currentResponses", currentResponses);
 
         try {
-            request.getRequestDispatcher("/result.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/result.jsp");
         } catch (Exception e) {
             ResponseBuilder.sendError(response, 500, "Ошибка отображения результата");
         }

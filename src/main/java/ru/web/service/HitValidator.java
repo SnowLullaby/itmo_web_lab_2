@@ -1,4 +1,4 @@
-package ru.web.util.validator;
+package ru.web.service;
 
 public class HitValidator {
     public static boolean validateHit(double x, double y, double r) {
