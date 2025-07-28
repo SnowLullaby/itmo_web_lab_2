@@ -30,7 +30,7 @@
             <tbody>
             <%
                 @SuppressWarnings("unchecked")
-                List<ResponseDTO> currentResponses = (List<ResponseDTO>) request.getAttribute("currentResponses");
+                List<ResponseDTO> currentResponses = (List<ResponseDTO>) session.getAttribute("currentResponses");
 
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");

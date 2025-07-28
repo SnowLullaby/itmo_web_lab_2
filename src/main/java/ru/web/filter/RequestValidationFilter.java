@@ -19,31 +19,35 @@ public class RequestValidationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
 
         String method = req.getMethod();
-        String path = req.getServletPath();
+        String servletPath = req.getServletPath();
+        String pathInfo = req.getPathInfo();
 
         if (!"GET".equalsIgnoreCase(method) && !"POST".equalsIgnoreCase(method)) {
             ResponseBuilder.sendError(resp, 405, "Метод не поддерживается");
             return;
         }
 
-        if (isValidPath(path)) {
+        if (isValidPath(servletPath, pathInfo)) {
             chain.doFilter(request, response);
         } else {
             ResponseBuilder.sendError(resp, 404, "Запрос к несуществующему ресурсу");
         }
     }
 
-    private boolean isValidPath(String path) {
-        if (path == null) return false;
+    private boolean isValidPath(String servletPath, String pathInfo) {
+        if (servletPath == null) return false;
 
-        return "/controller".equals(path) ||
-                path.isEmpty() ||
-                "/index.jsp".equals(path) ||
-                "/result.jsp".equals(path) ||
-                path.startsWith("/scripts/") ||
-                path.startsWith("/images/") ||
-                path.endsWith(".css") ||
-                path.endsWith(".js") ||
-                path.endsWith(".jpg");
+        if ("/controller".equals(servletPath)) {
+            return pathInfo == null || "/clear".equals(pathInfo);
+        }
+
+        return servletPath.isEmpty() ||
+                "/index.jsp".equals(servletPath) ||
+                "/result.jsp".equals(servletPath) ||
+                servletPath.startsWith("/scripts/") ||
+                servletPath.startsWith("/images/") ||
+                servletPath.endsWith(".css") ||
+                servletPath.endsWith(".js") ||
+                servletPath.endsWith(".jpg");
     }
 }

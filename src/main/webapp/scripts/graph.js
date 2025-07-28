@@ -141,7 +141,7 @@ function drawPointsFromSession() {
         } else {
             ctx.fillStyle = '#656570';
         }
-        ctx.arc(canvasX, canvasY, 5, 0, 2 * Math.PI);
+        ctx.arc(canvasX, canvasY, 4, 0, 2 * Math.PI);
         ctx.fill();
     });
 }

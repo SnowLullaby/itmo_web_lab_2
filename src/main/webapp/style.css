@@ -226,10 +226,10 @@ td[data-result="false"] {
 }
 
 .results-container > .clear-button {
-    padding: 15px;
+    padding: 1%;
     display: inline-block;
     width: 20%;
     min-width: 100px;
     box-sizing: border-box;
-    margin: 10px 0 15px 0;
+    margin: 7px 0 10px 0;
 }

@@ -39,17 +39,12 @@ function handleSubmission(getDataFuncName, event) {
     fetch(fetchOptions.url, fetchOptions)
         .then(response => {
             if (response.ok) {
-                return response.text();
+                window.location.href=response.url;
             } else {
-                return response.json().then(err => {
-                    throw new Error(err.error);
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Неизвестная ошибка');
                 });
             }
-        })
-        .then(html => {
-            document.open();
-            document.write(html);
-            document.close();
         })
         .catch(error => {
             alert("Ошибка: " + error.message);
