@@ -17,5 +17,6 @@ yButtons.forEach(button => {
         }
 
         yInput.value = selectedYValues.join(',');
+        saveFormState();
     });
 });

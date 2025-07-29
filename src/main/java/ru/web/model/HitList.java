@@ -1,4 +1,4 @@
-package ru.web.service;
+package ru.web.model;
 
 import ru.web.dto.ResponseDTO;
 

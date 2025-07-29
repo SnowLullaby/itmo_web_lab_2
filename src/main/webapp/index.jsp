@@ -1,4 +1,4 @@
-<%@ page import="ru.web.service.HitList" %>
+<%@ page import="ru.web.model.HitList" %>
 <%@ page import="ru.web.dto.ResponseDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
@@ -90,7 +90,7 @@
                 <td><%= r.r() %></td>
                 <td data-result="<%= r.hit() %>"><%= r.hit() ? "Да" : "Нет" %></td>
                 <td><%= formattedTime %></td>
-                <td><%= r.executionTime() %> нс</td>
+                <td><%= r.executionTime() %> ns</td>
             </tr>
             <%
                     }
@@ -101,6 +101,7 @@
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/scripts/buttonSelector.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/states.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/validator.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/graph.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/script.js"></script>
@@ -124,6 +125,7 @@
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
+        loadFormState();
         drawGraph(currentR);
     });
 </script>

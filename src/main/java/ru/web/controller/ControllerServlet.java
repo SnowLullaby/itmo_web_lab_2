@@ -1,7 +1,8 @@
 package ru.web.controller;
 
 import ru.web.dto.RequestDTO;
-import ru.web.service.HitList;
+import ru.web.dto.ResponseDTO;
+import ru.web.model.HitList;
 import ru.web.util.parser.RequestParser;
 import ru.web.util.validator.DTOValidator;
 import ru.web.util.builder.ResponseBuilder;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/controller")
 public class ControllerServlet extends HttpServlet {
@@ -34,7 +36,9 @@ public class ControllerServlet extends HttpServlet {
         }
 
         if ("/results".equals(pathInfo)) {
-            ResponseBuilder.sendResultsAsJson(request, response);
+            HitList hitList = HitList.getInstance(request.getSession());
+            List<ResponseDTO> allResponses = hitList.getAll();
+            ResponseBuilder.sendResultsAsJson(response, allResponses);
             return;
         }
 

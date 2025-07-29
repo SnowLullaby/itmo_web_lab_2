@@ -24,7 +24,7 @@
                 <th>R</th>
                 <th>Попадание</th>
                 <th>Время запроса</th>
-                <th>Время выполнения (нс)</th>
+                <th>Время выполнения</th>
             </tr>
             </thead>
             <tbody>
@@ -46,7 +46,7 @@
                 <td><%= r.r() %></td>
                 <td data-result="<%= r.hit() %>"><%= r.hit() ? "Да" : "Нет" %></td>
                 <td><%= formattedTime %></td>
-                <td><%= r.executionTime() %></td>
+                <td><%= r.executionTime() %> ns</td>
             </tr>
             <%
                 }

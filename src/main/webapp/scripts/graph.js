@@ -102,6 +102,7 @@ rSelect.addEventListener('change', () => {
         currentR = newR;
         drawGraph(currentR);
     }
+    saveFormState();
 });
 
 function getCanvasData(event) {

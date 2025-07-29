@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import ru.web.dto.*;
-import ru.web.service.HitList;
+import ru.web.model.HitList;
 import ru.web.service.HitValidator;
 import ru.web.util.builder.ResponseBuilder;
 
