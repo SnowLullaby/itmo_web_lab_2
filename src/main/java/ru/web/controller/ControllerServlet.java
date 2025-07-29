@@ -25,7 +25,16 @@ public class ControllerServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (processClear(request, response)) {
+        String pathInfo = request.getPathInfo();
+
+        if ("/clear".equals(pathInfo)) {
+            HitList.getInstance(request.getSession()).clear(request.getSession());
+            ResponseBuilder.sendOk(response, "Очищено");
+            return;
+        }
+
+        if ("/results".equals(pathInfo)) {
+            ResponseBuilder.sendResultsAsJson(request, response);
             return;
         }
 
@@ -51,21 +60,5 @@ public class ControllerServlet extends HttpServlet {
         } catch (Exception e) {
             ResponseBuilder.sendError(response, 500, "Ошибка при обработке");
         }
-    }
-
-    private boolean processClear(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String pathInfo = request.getPathInfo();
-
-        if ("/clear".equals(pathInfo)) {
-            HitList.getInstance(request.getSession()).clear(request.getSession());
-            try {
-                ResponseBuilder.sendOk(response, "Очищено");
-            } catch (Exception e) {
-                ResponseBuilder.sendError(response, 500, "Ошибка при перенаправлении");
-            }
-            return true;
-        }
-
-        return false;
     }
 }

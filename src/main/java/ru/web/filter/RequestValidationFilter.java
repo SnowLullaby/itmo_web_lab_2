@@ -38,7 +38,7 @@ public class RequestValidationFilter implements Filter {
         if (servletPath == null) return false;
 
         if ("/controller".equals(servletPath)) {
-            return pathInfo == null || "/clear".equals(pathInfo);
+            return pathInfo == null || "/clear".equals(pathInfo) || "/results".equals(pathInfo);
         }
 
         return servletPath.isEmpty() ||

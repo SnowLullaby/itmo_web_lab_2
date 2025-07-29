@@ -43,13 +43,13 @@
                     </select>
                 </div>
                 <div class="form-block">
-                    <button type="button" onclick="handleSubmission('getFormData')">Отправить</button>
+                    <button type="button" onclick="handleSubmit('getFormData')">Отправить</button>
                     <div class="error-message">Недопустимые данные для ввода</div>
                 </div>
             </form>
         </div>
         <div class="graph-cell">
-            <canvas id="graphCanvas" width="500" height="500" onclick="handleSubmission('getCanvasData', event)"></canvas>
+            <canvas id="graphCanvas" width="500" height="500" onclick="handleSubmit('getCanvasData', event)"></canvas>
             <div class="method-switcher">
                 <input type="radio" id="method_post" name="method" value="POST" checked><label for="method_post">POST</label>
                 <input type="radio" id="method_get" name="method" value="GET"><label for="method_get">GET</label>
