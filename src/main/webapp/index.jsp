@@ -78,17 +78,21 @@
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
 
+                java.text.DecimalFormat df = new java.text.DecimalFormat("#.####");
+                df.setRoundingMode(java.math.RoundingMode.HALF_UP);
+
                 if (allResponses != null && !allResponses.isEmpty()) {
                     java.util.Collections.reverse(allResponses);
                     for (ResponseDTO r : allResponses) {
                         LocalDateTime dateTime = LocalDateTime.parse(r.currentTime(), inputFormatter);
                         String formattedTime = dateTime.format(outputFormatter);
+
             %>
             <tr>
-                <td><%= r.x() %></td>
-                <td><%= r.y() %></td>
-                <td><%= r.r() %></td>
-                <td data-result="<%= r.hit() %>"><%= r.hit() ? "Да" : "Нет" %></td>
+                <td><%= df.format(r.x()) %></td>
+                <td><%= df.format(r.y()) %></td>
+                <td><%= df.format(r.r()) %></td>
+                <td data-result="<%= r.hit() %>"><%= r.hit() ? "Попадание" : "Промах" %></td>
                 <td><%= formattedTime %></td>
                 <td><%= r.executionTime() %> ns</td>
             </tr>
@@ -116,8 +120,7 @@
             x: <%= p.x() %>,
             y: <%= p.y() %>,
             r: <%= p.r() %>,
-            hit: <%= p.hit() %>,
-            isLast: <%= i == points.size() - 1 %>
+            hit: <%= p.hit() %>
         }<%= i < points.size() - 1 ? "," : "" %>
         <%
             }

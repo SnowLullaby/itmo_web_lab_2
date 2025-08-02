@@ -132,12 +132,12 @@ function drawPointsFromSession() {
     const scaleX = width / 11;
     const scaleY = height / 11;
 
-    ALL_POINTS_FROM_SESSION.forEach(point => {
+    ALL_POINTS_FROM_SESSION.forEach((point, index) => {
         const canvasX = centerX + point.x * scaleX;
         const canvasY = centerY - point.y * scaleY;
 
         ctx.beginPath();
-        if (point.isLast) {
+        if (index === ALL_POINTS_FROM_SESSION.length - 1) {
             ctx.fillStyle = point.hit ? '#00805a' : '#ff0059';
         } else {
             ctx.fillStyle = '#656570';

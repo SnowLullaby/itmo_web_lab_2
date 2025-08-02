@@ -35,16 +35,20 @@
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
 
+                java.text.DecimalFormat df = new java.text.DecimalFormat("#.####");
+                df.setRoundingMode(java.math.RoundingMode.HALF_UP);
+
                 if (currentResponses != null && !currentResponses.isEmpty()) {
+                    java.util.Collections.reverse(currentResponses);
                     for (ResponseDTO r : currentResponses) {
                         LocalDateTime dateTime = LocalDateTime.parse(r.currentTime(), inputFormatter);
                         String formattedTime = dateTime.format(outputFormatter);
             %>
             <tr>
-                <td><%= r.x() %></td>
-                <td><%= r.y() %></td>
-                <td><%= r.r() %></td>
-                <td data-result="<%= r.hit() %>"><%= r.hit() ? "Да" : "Нет" %></td>
+                <td><%= df.format(r.x()) %></td>
+                <td><%= df.format(r.y()) %></td>
+                <td><%= df.format(r.r()) %></td>
+                <td data-result="<%= r.hit() %>"><%= r.hit() ? "Попадание" : "Промах" %></td>
                 <td><%= formattedTime %></td>
                 <td><%= r.executionTime() %> ns</td>
             </tr>

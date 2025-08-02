@@ -91,7 +91,9 @@ window.addEventListener('pageshow', async function(event) {
 
 async function refreshPageData() {
     try {
-        const response = await fetch('controller/results', { method: 'GET' });
+        const response = await fetch('controller/results', {
+            method: document.querySelector('input[name="method"]:checked')?.value || 'POST',
+            headers: { 'Content-Type': 'application/json' } });
         if (!response.ok) alert('Не удалось загрузить данные');
 
         window.ALL_POINTS_FROM_SESSION = await response.json();
@@ -111,15 +113,15 @@ function updateResultsTable() {
     let points = window.ALL_POINTS_FROM_SESSION;
     if (points.length === 0) return;
 
-    [...points].reverse().forEach(result => {
+    [...points].forEach(result => {
         const date = new Date(result.currentTime);
         const formattedTime = date.toLocaleString('ru-RU', stat).replace(/,/, ' ');
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${result.x}</td>
-            <td>${result.y}</td>
-            <td>${result.r}</td>
+            <td>${Number(result.x).toFixed(4).replace(/\.?0+$/, '')}</td>
+            <td>${Number(result.y).toFixed(4).replace(/\.?0+$/, '')}</td>
+            <td>${Number(result.r).toFixed(4).replace(/\.?0+$/, '')}</td>
             <td data-result="${result.hit}">${result.hit ? "Попадание" : "Промах"}</td>
             <td>${formattedTime}</td>
             <td>${result.executionTime} ns</td>
