@@ -71,4 +71,6 @@ public class RequestParser {
         String contentType = request.getContentType();
         return contentType != null && contentType.contains("application/json");
     }
+
+    private RequestParser(){}
 }

@@ -42,4 +42,6 @@ public class ResponseBuilder {
             writer.flush();
         }
     }
+
+    private ResponseBuilder(){}
 }

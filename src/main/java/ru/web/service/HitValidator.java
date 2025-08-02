@@ -16,4 +16,6 @@ public class HitValidator {
     private static boolean validateTriangle(double x, double y, double r) {
         return x <= 0 && y <= 0 && x >= -r && y >= -r && -x - r <= y;
     }
+
+    private HitValidator(){}
 }

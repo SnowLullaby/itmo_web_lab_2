@@ -39,4 +39,6 @@ public class DTOValidator {
 
         return new ValidationResult(true, null);
     }
+
+    private DTOValidator(){}
 }
