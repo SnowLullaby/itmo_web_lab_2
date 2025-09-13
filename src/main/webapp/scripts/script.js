@@ -14,12 +14,13 @@ function getFormData() {
     const r = document.getElementById('r').value;
     const yValues = y.split(',').map(val => val.trim()).filter(val => val !== '');
     const method = document.querySelector('input[name="method"]:checked')?.value || 'POST';
-    return { x, yValues, r, method };
+    const disableRedirect = document.getElementById('disableRedirect').checked;
+    return { x, yValues, r, method, disableRedirect};
 }
 
 function handleSubmit(getDataFuncName, event) {
     const isCanvasClick = getDataFuncName === 'getCanvasData';
-    const { x, yValues, r, method } = isCanvasClick ? getCanvasData(event) : getFormData();
+    const { x, yValues, r, method, disableRedirect } = isCanvasClick ? getCanvasData(event) : getFormData();
 
     if (!validateInput(x, yValues, r)) return;
     const data = { x: parseFloat(x), y: yValues.map(y => parseFloat(y)), r: parseFloat(r) };
@@ -47,9 +48,13 @@ function handleSubmit(getDataFuncName, event) {
     }
 
     fetch(fetchOptions.url, fetchOptions)
-        .then(response => {
+        .then(async response => {
             if (response.ok) {
-                window.location.href=response.url;
+                if (disableRedirect) {
+                    await refreshPageData();
+                } else {
+                    window.location.href = response.url;
+                }
             } else {
                 return response.json().then(data => {
                     throw new Error(data.error || 'Неизвестная ошибка');
@@ -57,7 +62,7 @@ function handleSubmit(getDataFuncName, event) {
             }
         })
         .catch(error => {
-            alert("Ошибка: " + error.message);
+            showNotification("Ошибка: " + error.message);
         });
 }
 
@@ -76,10 +81,10 @@ async function clearHistory() {
             drawGraph(currentR);
         } else {
             const err = await response.json();
-            alert("Ошибка при очистке: " + err.message);
+            showNotification("Ошибка при очистке: " + err.message);
         }
     } catch (error) {
-        alert("Ошибка при очистке: " + error.message);
+        showNotification("Ошибка при очистке: " + error.message);
     }
 }
 
@@ -94,13 +99,13 @@ async function refreshPageData() {
         const response = await fetch('controller/results', {
             method: document.querySelector('input[name="method"]:checked')?.value || 'POST',
             headers: { 'Content-Type': 'application/json' } });
-        if (!response.ok) alert('Не удалось загрузить данные');
+        if (!response.ok) showNotification('Не удалось загрузить данные');
 
         window.ALL_POINTS_FROM_SESSION = await response.json();
         updateResultsTable();
         drawGraph(currentR);
     } catch (error) {
-        alert("Ошибка при обновлении данных: " + error.message);
+        showNotification("Ошибка при обновлении данных: " + error.message);
     }
 }
 

@@ -2,11 +2,14 @@ document.querySelectorAll('input[name="method"]').forEach(radio => {
     radio.addEventListener('change', saveFormState);
 });
 
+document.getElementById('disableRedirect').addEventListener('change', saveFormState);
+
 function saveFormState() {
     const state = {
         y: document.getElementById('y').value,
         r: document.getElementById('r').value,
-        method: document.querySelector('input[name="method"]:checked')?.value || 'POST'
+        method: document.querySelector('input[name="method"]:checked')?.value || 'POST',
+        disableRedirect: document.getElementById('disableRedirect').checked
     };
 
     try {
@@ -48,6 +51,10 @@ function loadFormState() {
         if (state.method) {
             const radio = document.querySelector(`input[name="method"][value="${state.method}"]`);
             if (radio) radio.checked = true;
+        }
+
+        if (state.disableRedirect !== undefined) {
+            document.getElementById('disableRedirect').checked = state.disableRedirect;
         }
     } catch (e) {}
 }

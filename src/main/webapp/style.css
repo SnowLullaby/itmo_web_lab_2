@@ -102,6 +102,34 @@ body {
     color: white;
 }
 
+.checkbox-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 12px;
+    margin: 20px 0 5px 0;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 12px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #a341a1;
+    transform: scale(1.5);
+}
+
+.checkbox-group label {
+    margin-right: 5px;
+    font-weight: normal;
+    font-size: 16px;
+}
+
 .form-cell {
     flex: 1;
     min-width: 200px;

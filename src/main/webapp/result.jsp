@@ -13,7 +13,7 @@
 <div class="main-container">
     <div class="header">
         Вавилина Екатерина Андреевна<br>
-        Группа P3230, Вариант 973474
+        Группа P3330, Вариант 973474
     </div>
     <div class="results-container">
         <table id="resultsTable">

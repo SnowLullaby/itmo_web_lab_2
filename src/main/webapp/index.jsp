@@ -15,7 +15,7 @@
 <div class="main-container">
     <div class="header">
         Вавилина Екатерина Андреевна<br>
-        Группа P3230, Вариант 973474
+        Группа P3330, Вариант 973474
     </div>
     <div class="form-graph-container">
         <div class="form-cell">
@@ -54,6 +54,10 @@
                 <input type="radio" id="method_post" name="method" value="POST" checked><label for="method_post">POST</label>
                 <input type="radio" id="method_get" name="method" value="GET"><label for="method_get">GET</label>
                 <div class="slider"></div>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="disableRedirect" name="disableRedirect">
+                <div class="checkbox-item"><label for="disableRedirect">Отключить редирект</label></div>
             </div>
         </div>
     </div>

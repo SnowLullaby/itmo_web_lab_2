@@ -40,9 +40,9 @@ public class AreaCheckServlet extends HttpServlet {
         long startTime = System.nanoTime();
 
         for (double y : dto.y()) {
-            long executionTime = System.nanoTime() - startTime;
             String currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             boolean hit = HitValidator.validateHit(dto.x(), y, dto.r());
+            long executionTime = System.nanoTime() - startTime;
             currentResponses.add(new ResponseDTO(dto.x(), y, dto.r(), hit, currentTime, executionTime));
         }
 
