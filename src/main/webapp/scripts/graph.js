@@ -119,7 +119,8 @@ function getCanvasData(event) {
     const y = -((clickY - centerY) / scaleY).toFixed(4);
     const r = rSelect.value;
     const method = document.querySelector('input[name="method"]:checked')?.value || 'POST';
-    return { x, yValues: [y], r, method };
+    const disableRedirect = document.getElementById('disableRedirect').checked;
+    return { x, yValues: [y], r, method, disableRedirect };
 }
 
 function drawPointsFromSession() {

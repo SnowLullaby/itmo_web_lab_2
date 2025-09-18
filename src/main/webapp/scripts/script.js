@@ -66,8 +66,47 @@ function handleSubmit(getDataFuncName, event) {
         });
 }
 
+function showModal() {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('modal');
+        const confirmButton = document.querySelector('.confirm-button');
+        const cancelButton = document.querySelector('.cancel-button');
+        const closeButton = document.querySelector('.modal-close');
+
+        modal.style.display = 'flex';
+
+        const confirmHandler = () => {
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            resolve(true);
+            confirmButton.removeEventListener('click', confirmHandler);
+            cancelButton.removeEventListener('click', cancelHandler);
+            closeButton.removeEventListener('click', closeHandler);
+        };
+
+        const cancelHandler = () => {
+            window.open('https://youtu.be/dQw4w9WgXcQ?si=FCETBeNvI23i2I4z&t=43');
+            resolve(false);
+        };
+
+        const closeHandler = () => {
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            resolve(false);
+            confirmButton.removeEventListener('click', confirmHandler);
+            cancelButton.removeEventListener('click', cancelHandler);
+            closeButton.removeEventListener('click', closeHandler);
+        };
+
+        confirmButton.addEventListener('click', confirmHandler);
+        cancelButton.addEventListener('click', cancelHandler);
+        closeButton.addEventListener('click', closeHandler);
+    });
+}
+
 async function clearHistory() {
-    if (!confirm("Очистить всю историю точек?")) return;
+    const confirmed = await showModal();
+    if (!confirmed) return;
 
     try {
         const response = await fetch('controller/clear', {

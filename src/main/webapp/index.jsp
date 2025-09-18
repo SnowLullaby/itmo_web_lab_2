@@ -17,6 +17,16 @@
         Вавилина Екатерина Андреевна<br>
         Группа P3330, Вариант 973474
     </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <p>Очистить всю историю точек?</p>
+            <div class="modal-buttons">
+                <button type="button" class="modal-button confirm-button">Продолжить</button>
+                <button type="button" class="modal-button cancel-button">Отмена</button>
+            </div>
+        </div>
+    </div>
     <div class="form-graph-container">
         <div class="form-cell">
             <form id="pointForm">
@@ -62,6 +72,7 @@
         </div>
     </div>
     <div class="results-container">
+        <button type="button" class="update-button" onclick="refreshPageData()">Обновить таблицу</button>
         <button type="button" class="clear-button" onclick="clearHistory()">Очистить историю</button>
         <table id="resultsTable">
             <thead>
