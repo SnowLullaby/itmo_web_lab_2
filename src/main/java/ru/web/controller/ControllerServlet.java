@@ -28,25 +28,25 @@ public class ControllerServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
 
         if ("/clear".equals(pathInfo)) {
-            handleClear(request, response);
+            handleClear(response);
             return;
         }
 
         if ("/results".equals(pathInfo)) {
-            handleResults(request, response);
+            handleResults(response);
             return;
         }
 
         handleAreaCheck(request, response);
     }
 
-    private void handleClear(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HitList.getInstance(request.getSession()).clear(request.getSession());
+    private void handleClear(HttpServletResponse response) throws IOException {
+        HitList.getInstance(getServletContext()).clear(getServletContext());
         ResponseBuilder.sendOk(response, "Очищено");
     }
 
-    private void handleResults(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HitList hitList = HitList.getInstance(request.getSession());
+    private void handleResults(HttpServletResponse response) throws IOException {
+        HitList hitList = HitList.getInstance(getServletContext());
         ResponseBuilder.sendResultsAsJson(response, hitList.getAll());
     }
 

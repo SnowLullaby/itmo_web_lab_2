@@ -46,7 +46,7 @@ public class AreaCheckServlet extends HttpServlet {
             currentResponses.add(new ResponseDTO(dto.x(), y, dto.r(), hit, currentTime, executionTime));
         }
 
-        HitList hitList = HitList.getInstance(request.getSession());
+        HitList hitList = HitList.getInstance(getServletContext());
         hitList.addAll(currentResponses);
 
         request.getSession().setAttribute("currentResponses", currentResponses);

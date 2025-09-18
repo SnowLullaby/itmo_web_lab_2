@@ -87,7 +87,7 @@
             </thead>
             <tbody>
             <%
-                HitList hitList = HitList.getInstance(request.getSession());
+                HitList hitList = HitList.getInstance(application);
                 List<ResponseDTO> allResponses = hitList.getAll();
 
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
