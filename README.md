@@ -35,8 +35,26 @@
 ## Сборка
 **Локально**:
 
-**Гелиос**:
+![deploy_1.jpg](assets/deploy_1.jpg)
+![deploy_2.jpg](assets/deploy_2.jpg)
+![deploy_3.jpg](assets/deploy_3.jpg)
 
+**Гелиос**:
+1. Установить и распаковать WildFliy
+2. Зайти в папку `/wildfly-34.0.0.Beta1/standalone/configuration`
+3. `vim standalone.xml`
+4. Найти группу свойств <socket-binding>, и для socket-binding с `name="http"` изменить номер порта на свой, а также для `name="management-http"` изменить номер порта на свой, отличный от того что указали в предыдущем сокете.
+5. Сохранить файл, перейти в `/wildfly-34.0.0.Beta1/bin` и запустить `./add-user.sh` и добавляем юзера в Management
+6. Запускаем `./standalone.sh`
+7. Теперь на локалке нужно будет пробросить два порта, это те порты, которые мы указали перед этим в standalone.xml 
+    ```bash
+    ssh -L 28002:localhost:28002 -p 2222 s336423@se.ifmo.ru
+    ssh -L 28003:localhost:28003 -p 2222 s336423@se.ifmo.ru
+    ./standalone.sh # в папке bin в wildfly
+    ```
+8. Теперь заходим на адрес management-http (`http:localhost:336423`). Откроется окно с логином - туда вводим данные, которые указали в add-user и попадаем в панель управления вайлдфлаем
+9. Жмем на Deployments и заливаем туда war-ник с лабой
+10. После деплоя жмем на content-root и нас перекинет на сайт с лабой.
 
 ## Вопросы
 - Java-сервлеты. Особенности реализации, ключевые методы, преимущества и недостатки относительно CGI и FastCGI.
