@@ -6,6 +6,7 @@ import ru.web.util.parser.RequestParser;
 import ru.web.util.validator.DTOValidator;
 import ru.web.util.builder.ResponseBuilder;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,9 @@ import java.io.IOException;
 
 @WebServlet("/controller/*")
 public class ControllerServlet extends HttpServlet {
+    @Inject
+    private HitList hitList;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processRequest(request, response);
@@ -28,25 +32,24 @@ public class ControllerServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
 
         if ("/clear".equals(pathInfo)) {
-            handleClear(request, response);
+            handleClear(response);
             return;
         }
 
         if ("/results".equals(pathInfo)) {
-            handleResults(request, response);
+            handleResults(response);
             return;
         }
 
         handleAreaCheck(request, response);
     }
 
-    private void handleClear(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HitList.getInstance(request.getSession()).clear(request.getSession());
+    private void handleClear(HttpServletResponse response) throws IOException {
+        hitList.clear();
         ResponseBuilder.sendOk(response, "Очищено");
     }
 
-    private void handleResults(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HitList hitList = HitList.getInstance(request.getSession());
+    private void handleResults(HttpServletResponse response) throws IOException {
         ResponseBuilder.sendResultsAsJson(response, hitList.getAll());
     }
 

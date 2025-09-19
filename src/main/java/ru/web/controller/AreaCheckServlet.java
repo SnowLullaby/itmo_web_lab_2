@@ -1,5 +1,6 @@
 package ru.web.controller;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ import java.util.List;
 
 @WebServlet("/area-check")
 public class AreaCheckServlet extends HttpServlet {
+    @Inject
+    private HitList hitList;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -46,7 +49,6 @@ public class AreaCheckServlet extends HttpServlet {
             currentResponses.add(new ResponseDTO(dto.x(), y, dto.r(), hit, currentTime, executionTime));
         }
 
-        HitList hitList = HitList.getInstance(request.getSession());
         hitList.addAll(currentResponses);
 
         request.getSession().setAttribute("currentResponses", currentResponses);

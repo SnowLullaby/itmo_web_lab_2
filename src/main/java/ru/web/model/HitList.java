@@ -1,26 +1,19 @@
 package ru.web.model;
 
 import ru.web.dto.ResponseDTO;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
-import java.util.*;
-
-public class HitList {
-    private static final String SESSION_ATTR = "allResponses";
+@Named("hitList")
+@SessionScoped
+public class HitList implements Serializable {
     private final List<ResponseDTO> responses;
 
-    private HitList() {
+    public HitList() {
         this.responses = new ArrayList<>();
-    }
-
-    public static HitList getInstance(HttpSession session) {
-        HitList hitList = (HitList) session.getAttribute(SESSION_ATTR);
-        if (hitList == null) {
-            hitList = new HitList();
-            session.setAttribute(SESSION_ATTR, hitList);
-        }
-        return hitList;
     }
 
     public void addAll(List<ResponseDTO> newResponses) {
@@ -35,8 +28,7 @@ public class HitList {
         return responses.size();
     }
 
-    public void clear(HttpSession session) {
+    public void clear() {
         responses.clear();
-        session.removeAttribute(SESSION_ATTR);
     }
 }

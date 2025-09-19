@@ -17,5 +17,8 @@ tasks.withType(JavaCompile).configureEach {
 
 dependencies {
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+    implementation 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
+    implementation 'org.glassfish:jakarta.faces:4.1.0'
+    compileOnly('jakarta.platform:jakarta.jakartaee-web-api:9.1.0')
     implementation 'com.google.code.gson:gson:2.11.0'
 }

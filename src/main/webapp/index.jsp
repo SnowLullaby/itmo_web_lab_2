@@ -1,4 +1,3 @@
-<%@ page import="ru.web.model.HitList" %>
 <%@ page import="ru.web.dto.ResponseDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
@@ -74,6 +73,7 @@
     <div class="results-container">
         <button type="button" class="update-button" onclick="refreshPageData()">Обновить таблицу</button>
         <button type="button" class="clear-button" onclick="clearHistory()">Очистить историю</button>
+        <jsp:useBean id="hitList" class="ru.web.model.HitList" scope="session"/>
         <table id="resultsTable">
             <thead>
             <tr>
@@ -87,7 +87,6 @@
             </thead>
             <tbody>
             <%
-                HitList hitList = HitList.getInstance(request.getSession());
                 List<ResponseDTO> allResponses = hitList.getAll();
 
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
