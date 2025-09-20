@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.LocalDateTime" %>
+<%@ page import="ru.web.model.HitList" %>
+<%@ page import="jakarta.enterprise.inject.spi.CDI" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ru">
@@ -9,7 +11,7 @@
     <meta charset="UTF-8">
     <title>Web lab 2</title>
     <link rel="stylesheet" href="style.css">
-</head>
+   </head>
 <body>
 <div class="main-container">
     <div class="header">
@@ -37,7 +39,7 @@
                     <label>Y:</label><br>
                     <div class="button-group" id="yButtons">
                         <% for(int y = -4; y <= 4; y++) { %>
-                            <button type="button" class="y-button" data-value="<%= y %>"><%= y %></button>
+                        <button type="button" class="y-button" data-value="<%= y %>"><%= y %></button>
                         <% } %>
                     </div>
                     <input type="hidden" id="y" name="y" value="">
@@ -47,7 +49,7 @@
                     <select id="r" name="r">
                         <option value="" selected>Выберите R</option>
                         <% for (double r = 1; r <= 3; r += 0.5) { %>
-                            <option value="<%= r %>"><%= r %></option>
+                        <option value="<%= r %>"><%= r %></option>
                         <% } %>
                     </select>
                 </div>
@@ -73,7 +75,6 @@
     <div class="results-container">
         <button type="button" class="update-button" onclick="refreshPageData()">Обновить таблицу</button>
         <button type="button" class="clear-button" onclick="clearHistory()">Очистить историю</button>
-        <jsp:useBean id="hitList" class="ru.web.model.HitList" scope="session"/>
         <table id="resultsTable">
             <thead>
             <tr>
@@ -87,6 +88,7 @@
             </thead>
             <tbody>
             <%
+                HitList hitList = CDI.current().select(HitList.class).get();
                 List<ResponseDTO> allResponses = hitList.getAll();
 
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -143,6 +145,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         loadFormState();
+        initThreeJS();
         drawGraph(currentR);
     });
 </script>
