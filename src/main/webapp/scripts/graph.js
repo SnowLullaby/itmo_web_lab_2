@@ -236,20 +236,30 @@ rSelect.addEventListener('change', () => {
 
 function getCanvasData(event) {
     const rect = canvas.getBoundingClientRect();
-    const newWidth = canvas.offsetWidth;
-    const newHeight = canvas.offsetHeight;
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
-    const centerX = newWidth / 2;
-    const centerY = newHeight / 2;
-    const scaleX = newWidth / 11;
-    const scaleY = newHeight / 11;
-    const x = ((clickX - centerX) / scaleX).toFixed(4);
-    const y = -((clickY - centerY) / scaleY).toFixed(4);
-    const r = rSelect.value;
-    const method = document.querySelector('input[name="method"]:checked')?.value || 'POST';
-    const disableRedirect = document.getElementById('disableRedirect').checked;
-    return { x, yValues: [y], r, method, disableRedirect };
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
+
+    mouse.x = (clickX / width) * 2 - 1;
+    mouse.y = -(clickY / height) * 2 + 1;
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersects = raycaster.intersectObject(plane);
+
+    if (intersects.length > 0) {
+        const point = intersects[0].point;
+        const x = point.x.toFixed(4);
+        const y = point.y.toFixed(4);
+        const r = rSelect.value;
+        const method = document.querySelector('input[name="method"]:checked')?.value || 'POST';
+        const disableRedirect = document.getElementById('disableRedirect').checked;
+        return { x, yValues: [y], r, method, disableRedirect };
+    } else {
+        return null;
+    }
 }
 
 function drawPointsFromSession() {
@@ -272,7 +282,7 @@ function drawPointsFromSession() {
         });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(point.x, point.y, 0);
-        pointsGroup.add(sphere); // Добавляем в группу, а не напрямую в сцену
+        pointsGroup.add(sphere);
     });
 
     scene.add(pointsGroup);

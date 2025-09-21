@@ -62,7 +62,7 @@
             </form>
         </div>
         <div class="graph-cell">
-            <canvas id="graphCanvas" width="500" height="500" onclick="handleSubmit('getCanvasData', event)"></canvas>
+            <canvas id="graphCanvas" width="500" height="500" ondblclick="handleSubmit('getCanvasData', event)"></canvas>
             <div class="method-switcher">
                 <input type="radio" id="method_post" name="method" value="POST" checked><label for="method_post">POST</label>
                 <input type="radio" id="method_get" name="method" value="GET"><label for="method_get">GET</label>
