@@ -1,97 +1,226 @@
+let scene, camera, renderer, mouse, plane, controls;
 const canvas = document.getElementById('graphCanvas');
-const ctx = canvas.getContext('2d');
 const rSelect = document.getElementById('r');
 let currentR = 4;
+let triangleMesh, arcMesh, rectMesh;
+
+function initThreeJS() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(90, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+    renderer.setClearColor(0xffffff, 0);
+
+    mouse = new THREE.Vector2();
+
+    camera.position.set(5, 3, 6);
+    camera.lookAt(0, 0, 0);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
+
+    const planeGeometry = new THREE.PlaneGeometry(20, 20);
+    const planeMaterial = new THREE.MeshBasicMaterial({ visible: false });
+    plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.position.z = 0;
+    scene.add(plane);
+
+    drawAxesAndLabels();
+    drawGraph(currentR);
+
+    animate();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+}
+
+function drawAxesAndLabels() {
+    const material = new THREE.LineBasicMaterial({ color: 0x2d4057 });
+
+    // ось x + стрелки
+    let points = [new THREE.Vector3(-5,0, 0), new THREE.Vector3(5, 0, 0)];
+    let geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const xAxis = new THREE.Line(geometry, material);
+    xAxis.renderOrder = 5;
+    scene.add(xAxis);
+
+    geometry = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(4.8, 0, -0.2),
+        new THREE.Vector3(5, 0, 0),
+        new THREE.Vector3(4.8, 0, 0.2)
+    ]);
+    const xArrowPos = new THREE.Line(geometry, material);
+    xArrowPos.renderOrder = 5;
+    scene.add(xArrowPos);
+
+    // ось y + стрелки
+    points = [new THREE.Vector3(0, -5, 0), new THREE.Vector3(0, 5, 0)];
+    geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const yAxis = new THREE.Line(geometry, material);
+    yAxis.renderOrder = 5;
+    scene.add(yAxis);
+
+    geometry = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 4.8, -0.2),
+        new THREE.Vector3(0, 5, 0),
+        new THREE.Vector3(0, 4.8, 0.2)
+    ]);
+    const yArrowPos = new THREE.Line(geometry, material);
+    yArrowPos.renderOrder = 5;
+    scene.add(yArrowPos);
+
+    // ось z + стрелки
+    points = [new THREE.Vector3(0, 0, -5), new THREE.Vector3(0, 0, 5)];
+    geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const zAxis = new THREE.Line(geometry, material);
+    zAxis.renderOrder = 5;
+    scene.add(zAxis);
+
+    geometry = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(-0.2, 0, 4.8),
+        new THREE.Vector3(0, 0, 5),
+        new THREE.Vector3(0.2, 0, 4.8)
+    ]);
+    const zArrowPos = new THREE.Line(geometry, material);
+    zArrowPos.renderOrder = 5;
+    scene.add(zArrowPos);
+
+    // ticks для меток
+    [-4, -3, -2, -1, 1, 2, 3, 4].forEach(val => {
+        geometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(val, -0.1, 0),
+            new THREE.Vector3(val, 0.1, 0)
+        ]);
+        const xTick = new THREE.Line(geometry, material);
+        xTick.renderOrder = 5;
+        scene.add(xTick);
+
+        geometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-0.1, val, 0),
+            new THREE.Vector3(0.1, val, 0)
+        ]);
+        const yTick = new THREE.Line(geometry, material);
+        yTick.renderOrder = 5;
+        scene.add(yTick);
+
+        geometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(0, -0.1, val),
+            new THREE.Vector3(0, 0.1, val)
+        ]);
+        const zTick = new THREE.Line(geometry, material);
+        zTick.renderOrder = 5;
+        scene.add(zTick);
+    });
+
+    // сфера для 0
+    const zeroSphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
+    const zeroSphereMaterial = new THREE.MeshBasicMaterial({ color: 0x2d4057 });
+    const zeroSphere = new THREE.Mesh(zeroSphereGeometry, zeroSphereMaterial);
+    zeroSphere.position.set(0, 0, 0);
+    zeroSphere.renderOrder = 5;
+    scene.add(zeroSphere);
+
+    // текстуры меток
+    function createTextSprite(text) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 256;
+        canvas.height = 256;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        context.font = '96px Helvetica';
+        context.fillStyle = '#2d4057';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const spriteMaterial = new THREE.SpriteMaterial({
+            map: texture,
+            transparent: true,
+            alphaTest: 0.5,
+            depthTest: false,
+            depthWrite: false
+        });
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.scale.set(1, 1, 1);
+        sprite.renderOrder = 10;
+        return sprite;
+    }
+
+    // метки
+    [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].forEach(x => {
+        const sprite = createTextSprite(x.toString());
+        sprite.position.set(x, -0.3, 0);
+        scene.add(sprite);
+    });
+
+    [-4, -3, -2, -1, 1, 2, 3, 4].forEach(y => {
+        const sprite = createTextSprite(y.toString());
+        sprite.position.set(0.3, y, 0);
+        scene.add(sprite);
+    });
+
+    [-4, -3, -2, -1, 1, 2, 3, 4].forEach(z => {
+        const sprite = createTextSprite(z.toString());
+        sprite.position.set(0, -0.3, z);
+        scene.add(sprite);
+    });
+
+    const zeroSprite = createTextSprite('0');
+    zeroSprite.position.set(0.3, -0.3, 0);
+    scene.add(zeroSprite);
+}
 
 function drawGraph(R) {
-    const width = canvas.width;
-    const height = canvas.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const scaleX = width / 11;
-    const scaleY = height / 11;
-
-    ctx.clearRect(0, 0, width, height);
-
-    ctx.lineWidth = 2;
-
-    // фигуры
-    ctx.fillStyle = 'rgba(163,65,161,0.55)';
-
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY + R * scaleY);
-    ctx.lineTo(centerX - R * scaleX, centerY);
-    ctx.lineTo(centerX, centerY);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, R * scaleY, Math.PI, -1 / 2 * Math.PI);
-    ctx.lineTo(centerX, centerY);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.moveTo(centerX + R * scaleX, centerY);
-    ctx.lineTo(centerX, centerY);
-    ctx.lineTo(centerX, centerY - R * scaleY);
-    ctx.lineTo(centerX + R * scaleX, centerY - R * scaleY);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.strokeStyle = '#2d4057';
-    ctx.fillStyle = '#2d4057';
-    ctx.font = '16px Arial';
-
-    // ось x + стрелка
-    ctx.beginPath();
-    ctx.moveTo(0, centerY);
-    ctx.lineTo(width - 5, centerY);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(width - 15, centerY - 5);
-    ctx.lineTo(width - 5, centerY);
-    ctx.lineTo(width - 15, centerY + 5);
-    ctx.fill();
-
-    [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].forEach(x => {
-        const xPos = centerX + x * scaleX;
-        ctx.beginPath();
-        ctx.moveTo(xPos, centerY - 5);
-        ctx.lineTo(xPos, centerY + 5);
-        ctx.stroke();
-        ctx.fillText(x.toString(), xPos - 5, centerY + 20);
+    const shapeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xa341a1,
+        opacity: 0.55,
+        transparent: true,
+        side: THREE.DoubleSide
     });
 
-    // ось y + стрелка
-    ctx.beginPath();
-    ctx.moveTo(centerX, height);
-    ctx.lineTo(centerX, 5);
-    ctx.stroke();
+    if (triangleMesh) scene.remove(triangleMesh);
+    if (arcMesh) scene.remove(arcMesh);
+    if (rectMesh) scene.remove(rectMesh);
 
-    ctx.beginPath();
-    ctx.moveTo(centerX - 5, 15);
-    ctx.lineTo(centerX, 5);
-    ctx.lineTo(centerX + 5, 15);
-    ctx.fill();
+    // треугольник
+    const triangleShape = new THREE.Shape();
+    triangleShape.moveTo(0, -R);
+    triangleShape.lineTo(-R, 0);
+    triangleShape.lineTo(0, 0);
+    triangleShape.closePath();
+    let geometry = new THREE.ShapeGeometry(triangleShape);
+    triangleMesh = new THREE.Mesh(geometry, shapeMaterial);
+    triangleMesh.position.z = 0;
+    scene.add(triangleMesh);
 
-    [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].forEach(y => {
-        const yPos = centerY - y * scaleY;
-        ctx.beginPath();
-        ctx.moveTo(centerX - 5, yPos);
-        ctx.lineTo(centerX + 5, yPos);
-        ctx.stroke();
-        ctx.fillText(y.toString(), centerX + 10, yPos + 5);
-    });
+    // окружность
+    const arcShape = new THREE.Shape();
+    arcShape.absarc(0, 0, R, Math.PI / 2, Math.PI, false);
+    arcShape.lineTo(0, 0);
+    arcShape.closePath();
+    geometry = new THREE.ShapeGeometry(arcShape);
+    arcMesh = new THREE.Mesh(geometry, shapeMaterial);
+    arcMesh.position.z = 0;
+    scene.add(arcMesh);
 
-    // 0
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.moveTo(centerX, centerY);
-    ctx.stroke();
-    ctx.fillText("0", centerX + 10, centerY + 20);
+    // прямоугольник
+    const rectShape = new THREE.Shape();
+    rectShape.moveTo(R, 0);
+    rectShape.lineTo(0, 0);
+    rectShape.lineTo(0, R);
+    rectShape.lineTo(R, R);
+    rectShape.closePath();
+    geometry = new THREE.ShapeGeometry(rectShape);
+    rectMesh = new THREE.Mesh(geometry, shapeMaterial);
+    rectMesh.position.z = 0;
+    scene.add(rectMesh);
 
     drawPointsFromSession();
 }
@@ -124,26 +253,27 @@ function getCanvasData(event) {
 }
 
 function drawPointsFromSession() {
+    const oldGroup = scene.getObjectByName('sessionPoints');
+    if (oldGroup) {
+        scene.remove(oldGroup);
+    }
+
     if (!window.ALL_POINTS_FROM_SESSION || ALL_POINTS_FROM_SESSION.length === 0) return;
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const scaleX = width / 11;
-    const scaleY = height / 11;
+    const pointsGroup = new THREE.Group();
+    pointsGroup.name = 'sessionPoints';
 
-    ALL_POINTS_FROM_SESSION.forEach((point, index) => {
-        const canvasX = centerX + point.x * scaleX;
-        const canvasY = centerY - point.y * scaleY;
-
-        ctx.beginPath();
-        if (index === ALL_POINTS_FROM_SESSION.length - 1) {
-            ctx.fillStyle = point.hit ? '#00805a' : '#ff0059';
-        } else {
-            ctx.fillStyle = '#656570';
-        }
-        ctx.arc(canvasX, canvasY, 4, 0, 2 * Math.PI);
-        ctx.fill();
+    window.ALL_POINTS_FROM_SESSION.forEach((point, index) => {
+        const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+        const material = new THREE.MeshBasicMaterial({
+            color: index === window.ALL_POINTS_FROM_SESSION.length - 1
+                ? (point.hit ? 0x00805a : 0xff0059)
+                : 0x656570
+        });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(point.x, point.y, 0);
+        pointsGroup.add(sphere); // Добавляем в группу, а не напрямую в сцену
     });
+
+    scene.add(pointsGroup);
 }
