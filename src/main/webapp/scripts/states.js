@@ -33,9 +33,10 @@ function loadFormState() {
         if (state.y) {
             document.getElementById('y').value = state.y;
             const yButtons = document.querySelectorAll('.y-button');
+            selectedYValues = state.y.split(',').map(val => val.trim()).filter(val => val !== '');
             yButtons.forEach(btn => {
                 const val = btn.getAttribute('data-value');
-                if (state.y.split(',').includes(val)) {
+                if (selectedYValues.includes(val)) {
                     btn.classList.add('selected');
                 } else {
                     btn.classList.remove('selected');
